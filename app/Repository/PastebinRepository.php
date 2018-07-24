@@ -1,12 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: user
- * Date: 24.07.2018
- * Time: 19:00
- */
 
-use Carbon\Carbon;
+namespace App\Repository;
+
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class PastebinRepository
@@ -18,5 +14,9 @@ class PastebinRepository
 
     public function getFirstTenPublicRecordsForUser($userId){
         return DB::table('pastebins')->where([['user_id','=',$userId],['term','>',Carbon::now()]])->paginate(10);
+    }
+
+    public function getByUrl($url){
+        return DB::table('pastebins')->where('url','=',$url);
     }
 }

@@ -39,7 +39,8 @@
                <h1>Public pastebin</h1>
                @foreach ($pastebins as $pastebin)
                    Name =  {{ $pastebin->name }}
-                   Text = {{$pastebin->text}} <br>
+                   Text = {{$pastebin->text}}
+                   Url = {{$pastebin->url}}<br>
                @endforeach
 
                @if( Auth::check() )

@@ -21,6 +21,7 @@ Auth::routes();
 
 Route::get('/pastebin', 'PastebinController@index')->name('pastebin');
 Route::post('/pastebin', 'PastebinController@store')->name('postPastebin');
+Route::get('/pastebin/{url}', 'PastebinController@show')->name('pastebin-enity');
 
 Route::get('/usr/pastebin', 'PastebinRegisterController@index')->name('usrPasterbin');
 

@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\PastebinRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
+
 class PastebinRegisterController extends Controller
 {
-    private $pastebinREpository;
+    private $pastebinRepository;
 
-    public function __construct(\PastebinRepository $pastebinRepository)
+    public function __construct(PastebinRepository $repository)
     {
         $this->middleware('auth');
-        $this->pastebinREpository=$pastebinRepository;
+        $this->pastebinRepository=$repository;
     }
 
     public function index()
     {
-        $pastebins = $this->pastebinREpository->getFirstTenPublicRecordsForUser(Auth::id());
+        $pastebins = $this->pastebinRepository->getFirstTenPublicRecordsForUser(Auth::id());
         return view('pastebin-register-user',['pastebins'=>$pastebins]);
     }
 }

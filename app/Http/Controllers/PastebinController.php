@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Pastebin;
+use App\Repository\PastebinRepository;
 use App\Service\PastebinApi;
 use App\Service\PastebinDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PastebinRepository;
+use Illuminate\Support\Facades\DB;
 
 
 class PastebinController extends Controller
@@ -42,8 +43,14 @@ class PastebinController extends Controller
         $term = $request->get('term');
 
         $paste = new PastebinDto();
-        $paste->set_me_public();
-        $paste->set_paste_expire_date('N');
+
+        switch ($access){
+            case 'public': $paste->set_me_public(); break;
+            case 'unlisted': $paste->set_me_unlisted(); break;
+            case 'private': $paste->set_me_private(); break;
+        }
+
+        $paste->set_paste_expire_date($term);
         $paste->set_paste_name($name);
         $paste->set_paste_format($languale);
         $paste->set_paste_code($text);
@@ -69,11 +76,20 @@ class PastebinController extends Controller
         }
         $pastebin->term=$nowDateTime;
         $pastebin->access=$access;
-        $pastebin->url=$url;
+        $pastebin->url=str_replace('https://pastebin.com/','',$url);
+
+        if(Auth::check()){
+            $pastebin->user_id=Auth::id();
+        }
         $pastebin->save();
 
 
         return redirect()->route('pastebin');
+    }
+
+    public function show($url){
+        $pastebin = DB::table('pastebins')->where('url','=',$url)->first();
+        return view('pastebin-enitiy',['pastebin'=>$pastebin]);
     }
 
 }
