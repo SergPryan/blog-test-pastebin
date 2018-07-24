@@ -19,11 +19,14 @@ Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/pastebin', 'PastebinController@index')->name('pastebin');
+Route::get('/home', 'PastebinController@index')->name('home');
 Route::post('/pastebin', 'PastebinController@store')->name('postPastebin');
 Route::get('/pastebin/{url}', 'PastebinController@show')->name('pastebin-enity');
 
 Route::get('/usr/pastebin', 'PastebinRegisterController@index')->name('usrPasterbin');
+
+Route::get('/redirect', 'SocialAuthFacebookController@redirect');
+Route::get('/callback', 'SocialAuthFacebookController@callback');
 
 
 

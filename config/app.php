@@ -165,6 +165,11 @@ return [
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
+        /*
+         * Facebook
+         */
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
     ],
 
     /*
@@ -215,5 +220,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
 ];

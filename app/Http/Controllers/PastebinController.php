@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 
 use App\Pastebin;
 use App\Repository\PastebinRepository;
-use App\Service\PastebinApi;
-use App\Service\PastebinDto;
+use App\Services\PastebinApi;
+use App\Services\PastebinDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,7 +84,7 @@ class PastebinController extends Controller
         $pastebin->save();
 
 
-        return redirect()->route('pastebin');
+        return redirect()->route('home');
     }
 
     public function show($url){
