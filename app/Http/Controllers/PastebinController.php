@@ -34,15 +34,14 @@ class PastebinController extends Controller
         $access = $request->get('access');
 
         $paste = new PastebinDto();
-        $paste->set_me_public(); // http://pastebin.com/api#7
-        $paste->set_paste_expire_date('N'); // http://pastebin.com/api#6
+        $paste->set_me_public();
+        $paste->set_paste_expire_date('N');
         $paste->set_paste_name($name);
-        $paste->set_paste_format($languale); // http://pastebin.com/api#5
+        $paste->set_paste_format($languale);
         $paste->set_paste_code($text);
 
         $pastebinApi = new PastebinApi('8bdc76c257b607cf0d5bcdf00ed0e230');
         $url = $pastebinApi->send_paste($paste);
-
 
         $pastebin = new Pastebin();
         $pastebin->name=$name;
@@ -56,5 +55,5 @@ class PastebinController extends Controller
 
         return redirect()->route('pastebin');
     }
-    
+
 }
