@@ -20,7 +20,7 @@ class CreatePastebinsTable extends Migration
             $table->dateTime('term');
             $table->string('url')->nullable();
             $table->string('name');
-            $table->string('text');
+            $table->string('text',524288);
             $table->integer('user_id')->nullable();
         });
     }

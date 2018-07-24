@@ -10,18 +10,18 @@ use App\Services\PastebinDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
 
 
 class PastebinController extends Controller
 {
     private $pastebinRepository;
+    private $apiKey='8bdc76c257b607cf0d5bcdf00ed0e230';
 
     public function __construct(PastebinRepository $repository)
     {
         $this->pastebinRepository=$repository;
     }
-
 
     public function index()
     {
@@ -38,10 +38,23 @@ class PastebinController extends Controller
     {
         $name = $request->get('name');
         $text = $request->get('text');
-        $languale=$request->get('language');
+        $language=$request->get('language');
         $access = $request->get('access');
         $term = $request->get('term');
 
+
+        $url = $this->sendPastebin($access, $term, $name, $language, $text);
+        $this->savePastebin($access,$term,$name,$language,$text,$url);
+
+        return redirect()->route('home');
+    }
+
+    public function show($url){
+        $pastebin = $this->pastebinRepository->getByUrl($url);
+        return view('pastebin-enitiy',['pastebin'=>$pastebin]);
+    }
+
+    private function sendPastebin($access, $term, $name, $language, $text){
         $paste = new PastebinDto();
 
         switch ($access){
@@ -52,16 +65,18 @@ class PastebinController extends Controller
 
         $paste->set_paste_expire_date($term);
         $paste->set_paste_name($name);
-        $paste->set_paste_format($languale);
+        $paste->set_paste_format($language);
         $paste->set_paste_code($text);
 
-        $pastebinApi = new PastebinApi('8bdc76c257b607cf0d5bcdf00ed0e230');
-        $url = $pastebinApi->send_paste($paste);
+        $pastebinApi = new PastebinApi($this->apiKey);
+        return $pastebinApi->send_paste($paste);
+    }
 
+    private function savePastebin($access, $term, $name, $language, $text,$url){
         $pastebin = new Pastebin();
         $pastebin->name=$name;
         $pastebin->text=$text;
-        $pastebin->language=$languale;
+        $pastebin->language=$language;
 
         $nowDateTime=Carbon::now();
 
@@ -82,14 +97,6 @@ class PastebinController extends Controller
             $pastebin->user_id=Auth::id();
         }
         $pastebin->save();
-
-
-        return redirect()->route('home');
-    }
-
-    public function show($url){
-        $pastebin = DB::table('pastebins')->where('url','=',$url)->first();
-        return view('pastebin-enitiy',['pastebin'=>$pastebin]);
     }
 
 }

@@ -17,6 +17,6 @@ class PastebinRepository
     }
 
     public function getByUrl($url){
-        return DB::table('pastebins')->where('url','=',$url);
+        return DB::table('pastebins')->where('url','=',$url)->first();
     }
 }
