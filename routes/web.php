@@ -19,8 +19,10 @@ Auth::routes();
 
 //Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/pastebin', 'PastebinController@index')->name('pastebin');
-Route::post('/pastebin', 'PastebinController@store')->name('pastebin');
+Route::get('/pastebin', 'PastebinController@index');
+Route::post('/pastebin', 'PastebinController@store');
+
+Route::get('/usr/pastebin', 'PastebinRegisterController@index');
 
 
 

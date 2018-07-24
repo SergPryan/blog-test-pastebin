@@ -8,13 +8,22 @@ use App\Service\PastebinApi;
 use App\Service\PastebinDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class PastebinController extends Controller
 {
     public function index()
     {
-        return view('pastebin');
+        $pastebins = DB::table('pastebins')->paginate(10);
+        $pastebinsRegisterUser=[];
+        if(Auth::check()){
+            $userId=Auth::id();
+            echo $userId;
+            $pastebinsRegisterUser = DB::table('pastebins')->where('user_id','=',$userId)->paginate(10);
+        }
+        return view('pastebin',['pastebins'=>$pastebins,'pastebinsRegisterUser'=>$pastebinsRegisterUser]);
     }
 
     public function store(Request $request)
@@ -47,4 +56,5 @@ class PastebinController extends Controller
 
         return redirect()->route('pastebin');
     }
+    
 }

@@ -32,4 +32,24 @@
                    <button type="submit">Save pastebin</button>
                </form>
 
+
+               <h1>Public pastebin</h1>
+               @foreach ($pastebins as $pastebin)
+                   Name =  {{ $pastebin->name }}
+                   Text = {{$pastebin->text}} <br>
+               @endforeach
+
+               @if( Auth::check() )
+                   Current user: {{ Auth::user()->name }}
+                   <h1>Last pastebin</h1>
+                   @foreach ($pastebinsRegisterUser as $pastebin)
+                       Name =  {{ $pastebin->name }}
+                       Text = {{$pastebin->text}} <br>
+                   @endforeach
+               @endif
+
+
+
+
+
 @endsection
