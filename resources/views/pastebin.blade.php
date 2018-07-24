@@ -13,20 +13,23 @@
                    </label>
                    <label>Select term
                        <select name="term">
-                           <option value="10M">10M</option>
-                           <option value="1H">1H</option>
-                           <option value="3H">3H</option>
-                           <option value="1D">1D</option>
-                           <option value="1W">1W</option>
-                           <option value="1M">1M</option>
-                           <option value="N">N</option>
+                           <option value="10M">10 minut</option>
+                           <option value="1H">1 hour</option>
+                           <option value="3H">3 hour</option>
+                           <option value="1D">1 day</option>
+                           <option value="1W">1 week</option>
+                           <option value="1M">1 month</option>
+                           <option value="N">Not limit</option>
                        </select>
                    </label>
                    <label>Select access
                        <select name="access">
                            <option value="public">public</option>
                            <option value="unlisted">unlisted</option>
+
+                              @if( Auth::check() )
                            <option value="private">private</option>
+                               @endif
                        </select>
                    </label>
                    <button type="submit">Save pastebin</button>

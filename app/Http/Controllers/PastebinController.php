@@ -9,19 +9,26 @@ use App\Service\PastebinDto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use PastebinRepository;
 
 
 class PastebinController extends Controller
 {
+    private $pastebinRepository;
+
+    public function __construct(PastebinRepository $repository)
+    {
+        $this->pastebinRepository=$repository;
+    }
+
+
     public function index()
     {
-        $pastebins = DB::table('pastebins')->paginate(10);
+        $pastebins =$this->pastebinRepository->getFirstTenPublicRecords();
         $pastebinsRegisterUser=[];
         if(Auth::check()){
             $userId=Auth::id();
-            echo $userId;
-            $pastebinsRegisterUser = DB::table('pastebins')->where('user_id','=',$userId)->paginate(10);
+            $pastebinsRegisterUser = $this->pastebinRepository->getFirstTenPublicRecordsForUser($userId);
         }
         return view('pastebin',['pastebins'=>$pastebins,'pastebinsRegisterUser'=>$pastebinsRegisterUser]);
     }
@@ -32,6 +39,7 @@ class PastebinController extends Controller
         $text = $request->get('text');
         $languale=$request->get('language');
         $access = $request->get('access');
+        $term = $request->get('term');
 
         $paste = new PastebinDto();
         $paste->set_me_public();
@@ -47,7 +55,19 @@ class PastebinController extends Controller
         $pastebin->name=$name;
         $pastebin->text=$text;
         $pastebin->language=$languale;
-        $pastebin->term=Carbon::now();
+
+        $nowDateTime=Carbon::now();
+
+        switch ($term){
+            case '10M': $nowDateTime->addMinutes(10); break;
+            case '1H': $nowDateTime->addHour(); break;
+            case '3H': $nowDateTime->addHour(3); break;
+            case '1D': $nowDateTime->addDay(); break;
+            case '1W': $nowDateTime->addWeek(); break;
+            case '1M': $nowDateTime->addMonth(); break;
+            default: $nowDateTime->addYear(1000);
+        }
+        $pastebin->term=$nowDateTime;
         $pastebin->access=$access;
         $pastebin->url=$url;
         $pastebin->save();
